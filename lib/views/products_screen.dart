@@ -3,7 +3,7 @@ import 'package:conditional_builder_null_safety/conditional_builder_null_safety.
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shop_app/models/home_model.dart';
-
+import '../models/categories_model.dart';
 import '../shared/cubit/app/cubit.dart';
 import '../shared/cubit/app/states.dart';
 
@@ -16,9 +16,9 @@ class ProductsScreen extends StatelessWidget {
       listener: (BuildContext context, Object? state) {},
       builder: (BuildContext context, state) {
         return ConditionalBuilder(
-          condition: AppCubit.get(context).homeModel != null,
+          condition: AppCubit.get(context).homeModel != null && AppCubit.get(context).categoriesModel != null,
           builder: (BuildContext context) =>
-              productsBuilder(AppCubit.get(context).homeModel),
+              productsBuilder(AppCubit.get(context).homeModel, AppCubit.get(context).categoriesModel ),
           fallback: (BuildContext context) =>
               const Center(child: CircularProgressIndicator()),
         );
@@ -26,9 +26,10 @@ class ProductsScreen extends StatelessWidget {
     );
   }
 
-  Widget productsBuilder(HomeModel? model) => SingleChildScrollView(
+  Widget productsBuilder(HomeModel? model, CategoriesModel? categoriesModel) => SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             CarouselSlider(
                 items: model?.data?.banners
@@ -53,7 +54,41 @@ class ProductsScreen extends StatelessWidget {
                   scrollDirection: Axis.horizontal,
                 )),
             const SizedBox(
-              height: 10.0,
+              height: 20.0,
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    'Categories',
+                    style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.w800),
+                  ),
+                  const SizedBox(
+                    height: 20.0,
+                  ),
+                  SizedBox(
+                    height: 100.0,
+                    child: ListView.separated(
+                      physics: const BouncingScrollPhysics(),
+                        scrollDirection: Axis.horizontal,
+                        itemBuilder: (context, index) => buildCategoryItem(categoriesModel!.data!.data[index]),
+                        separatorBuilder: (context, index) => const SizedBox(width: 10.0),
+                        itemCount: categoriesModel!.data!.data.length),
+                  ),
+                  const SizedBox(
+                    height: 20.0,
+                  ),
+                  const Text(
+                    'New Products',
+                    style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.w800),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(
+              height: 20.0,
             ),
             Container(
               color: Colors.grey[300],
@@ -74,6 +109,35 @@ class ProductsScreen extends StatelessWidget {
         ),
       );
 }
+
+Widget buildCategoryItem(DataModel model) => Stack(
+      alignment: AlignmentDirectional.bottomCenter,
+      children: [
+         Image(
+          image: NetworkImage(model.image),
+          width: 100.0,
+          height: 100.0,
+          fit: BoxFit.cover,
+        ),
+        Container(
+          color: Colors.black.withOpacity(0.8),
+          width: 100.0,
+          height: 25.0,
+          child: Padding(
+            padding: const EdgeInsets.all(3.0),
+            child: Text(
+              model.name,
+              maxLines: 1,
+              textAlign: TextAlign.center,
+              overflow: TextOverflow.ellipsis,
+              style: const TextStyle(
+                color: Colors.white,
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
 
 Widget buildGridProduct(ProductModel model) => Container(
       color: Colors.white,
@@ -143,7 +207,7 @@ Widget buildGridProduct(ProductModel model) => Container(
                       ),
                     const Spacer(),
                     IconButton(
-                      padding: EdgeInsets.zero,
+                        padding: EdgeInsets.zero,
                         onPressed: () {},
                         icon: const Icon(
                           Icons.favorite_border,

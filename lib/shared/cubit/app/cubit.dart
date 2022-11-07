@@ -6,7 +6,7 @@ import 'package:shop_app/shared/network/end_points.dart';
 import 'package:shop_app/shared/network/remote/dio_helper.dart';
 import 'package:shop_app/views/favorites_screen.dart';
 import 'package:shop_app/views/settings_screen.dart';
-
+import '../../../models/categories_model.dart';
 import '../../../models/home_model.dart';
 import '../../../views/categories_screen.dart';
 import '../../../views/products_screen.dart';
@@ -43,6 +43,21 @@ class AppCubit extends Cubit<AppStates> {
     }).catchError((error) {
       print(error.toString());
       emit(ErrorHomeState());
+    });
+  }
+
+  CategoriesModel? categoriesModel;
+
+  void getCategories()
+  {
+    DioHelper.getData(
+      url: GET_CATEGORIES,
+    ).then((value) {
+      categoriesModel = CategoriesModel.fromJson(value.data);
+      emit(SuccessCategoriesState());
+    }).catchError((error) {
+      print(error.toString());
+      emit(ErrorCategoriesState());
     });
   }
 }

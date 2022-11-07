@@ -12,12 +12,13 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   DioHelper.init();
-
   await CacheHelper.init();
 
-  Widget widget;
-  bool? onBoarding = CacheHelper.getData(key: 'onBoarding');
-  token = CacheHelper.getData(key: 'token');
+  Widget? widget;
+
+  bool? onBoarding = CacheHelper.getData(key: "onBoarding");
+
+  token = CacheHelper.getData(key: "token");
 
   if (onBoarding != null) {
     if (token != null) {
@@ -33,9 +34,10 @@ void main() async {
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp(this.startWidget, {Key? key}) : super(key: key);
+
   final Widget startWidget;
 
-  const MyApp(this.startWidget, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

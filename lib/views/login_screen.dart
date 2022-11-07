@@ -43,7 +43,6 @@ class LoginScreen extends StatelessWidget {
           }
         },
         builder: (BuildContext context, Object? state) => Scaffold(
-          appBar: AppBar(),
           body: Center(
             child: SingleChildScrollView(
               child: Padding(

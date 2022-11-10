@@ -19,6 +19,7 @@ void main() async {
   bool? onBoarding = CacheHelper.getData(key: "onBoarding");
 
   token = CacheHelper.getData(key: "token");
+  print(token);
 
   if (onBoarding != null) {
     if (token != null) {
@@ -42,7 +43,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (BuildContext context) => AppCubit()..getHomeData()..getCategories(),
+      create: (BuildContext context) => AppCubit()..getHomeData()..getCategories()..getFavorites(),
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         theme: ThemeData(

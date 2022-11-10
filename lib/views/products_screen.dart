@@ -3,6 +3,7 @@ import 'package:conditional_builder_null_safety/conditional_builder_null_safety.
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shop_app/models/home_model.dart';
+import 'package:shop_app/shared/components/components.dart';
 import '../models/categories_model.dart';
 import '../shared/cubit/app/cubit.dart';
 import '../shared/cubit/app/states.dart';
@@ -13,12 +14,21 @@ class ProductsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<AppCubit, AppStates>(
-      listener: (BuildContext context, Object? state) {},
+      listener: (BuildContext context, Object? state) {
+        if (state is SuccessChangeFavoritesState) {
+          if (!state.model.status!) {
+            showToast(message: state.model.message!, state: ToastStates.ERROR);
+          }
+        }
+      },
       builder: (BuildContext context, state) {
         return ConditionalBuilder(
-          condition: AppCubit.get(context).homeModel != null && AppCubit.get(context).categoriesModel != null,
-          builder: (BuildContext context) =>
-              productsBuilder(AppCubit.get(context).homeModel, AppCubit.get(context).categoriesModel ),
+          condition: AppCubit.get(context).homeModel != null &&
+              AppCubit.get(context).categoriesModel != null,
+          builder: (BuildContext context) => productsBuilder(
+              AppCubit.get(context).homeModel,
+              AppCubit.get(context).categoriesModel,
+              context),
           fallback: (BuildContext context) =>
               const Center(child: CircularProgressIndicator()),
         );
@@ -26,13 +36,15 @@ class ProductsScreen extends StatelessWidget {
     );
   }
 
-  Widget productsBuilder(HomeModel? model, CategoriesModel? categoriesModel) => SingleChildScrollView(
+  Widget productsBuilder(
+          HomeModel? model, CategoriesModel? categoriesModel, context) =>
+      SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             CarouselSlider(
-                items: model?.data?.banners
+                items: model!.data.banners
                     .map(
                       (e) => Image(
                         image: NetworkImage(e.image),
@@ -63,7 +75,8 @@ class ProductsScreen extends StatelessWidget {
                 children: [
                   const Text(
                     'Categories',
-                    style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.w800),
+                    style:
+                        TextStyle(fontSize: 24.0, fontWeight: FontWeight.w800),
                   ),
                   const SizedBox(
                     height: 20.0,
@@ -71,10 +84,12 @@ class ProductsScreen extends StatelessWidget {
                   SizedBox(
                     height: 100.0,
                     child: ListView.separated(
-                      physics: const BouncingScrollPhysics(),
+                        physics: const BouncingScrollPhysics(),
                         scrollDirection: Axis.horizontal,
-                        itemBuilder: (context, index) => buildCategoryItem(categoriesModel!.data!.data[index]),
-                        separatorBuilder: (context, index) => const SizedBox(width: 10.0),
+                        itemBuilder: (context, index) => buildCategoryItem(
+                            categoriesModel!.data!.data[index]),
+                        separatorBuilder: (context, index) =>
+                            const SizedBox(width: 10.0),
                         itemCount: categoriesModel!.data!.data.length),
                   ),
                   const SizedBox(
@@ -82,7 +97,8 @@ class ProductsScreen extends StatelessWidget {
                   ),
                   const Text(
                     'New Products',
-                    style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.w800),
+                    style:
+                        TextStyle(fontSize: 24.0, fontWeight: FontWeight.w800),
                   ),
                 ],
               ),
@@ -100,8 +116,9 @@ class ProductsScreen extends StatelessWidget {
                 crossAxisSpacing: 1.0,
                 childAspectRatio: 1 / 1.61,
                 children: List.generate(
-                  model!.data!.products.length,
-                  (index) => buildGridProduct(model.data!.products[index]),
+                  model.data.products.length,
+                  (index) =>
+                      buildGridProduct(model.data.products[index], context),
                 ),
               ),
             ),
@@ -113,7 +130,7 @@ class ProductsScreen extends StatelessWidget {
 Widget buildCategoryItem(DataModel model) => Stack(
       alignment: AlignmentDirectional.bottomCenter,
       children: [
-         Image(
+        Image(
           image: NetworkImage(model.image),
           width: 100.0,
           height: 100.0,
@@ -139,7 +156,7 @@ Widget buildCategoryItem(DataModel model) => Stack(
       ],
     );
 
-Widget buildGridProduct(ProductModel model) => Container(
+Widget buildGridProduct(ProductModel? model, context) => Container(
       color: Colors.white,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -148,7 +165,7 @@ Widget buildGridProduct(ProductModel model) => Container(
             alignment: AlignmentDirectional.bottomStart,
             children: [
               Image(
-                image: NetworkImage(model.image),
+                image: NetworkImage(model!.image),
                 width: double.infinity,
                 height: 200,
               ),
@@ -206,13 +223,22 @@ Widget buildGridProduct(ProductModel model) => Container(
                             decoration: TextDecoration.lineThrough),
                       ),
                     const Spacer(),
-                    IconButton(
-                        padding: EdgeInsets.zero,
-                        onPressed: () {},
-                        icon: const Icon(
-                          Icons.favorite_border,
-                          size: 14.0,
-                        )),
+                    CircleAvatar(
+                      radius: 15.0,
+                      backgroundColor:
+                          AppCubit.get(context).favorites[model.id]!
+                              ? Colors.deepPurple
+                              : Colors.grey,
+                      child: IconButton(
+                          onPressed: () {
+                            AppCubit.get(context).changeFavorites(model.id);
+                          },
+                          icon: const Icon(
+                            Icons.favorite_border,
+                            color: Colors.white,
+                            size: 14.0,
+                          )),
+                    ),
                   ],
                 ),
               ],

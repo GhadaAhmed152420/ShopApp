@@ -43,7 +43,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (BuildContext context) => AppCubit()..getHomeData()..getCategories()..getFavorites(),
+      create: (BuildContext context) => AppCubit()..getHomeData()..getCategories()..getFavorites()..getUserData(),
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         theme: ThemeData(

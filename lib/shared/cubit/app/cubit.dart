@@ -8,6 +8,7 @@ import 'package:shop_app/views/settings_screen.dart';
 import '../../../models/categories_model.dart';
 import '../../../models/change_favorites_model.dart';
 import '../../../models/home_model.dart';
+import '../../../models/login_model.dart';
 import '../../../views/categories_screen.dart';
 import '../../../views/products_screen.dart';
 import '../../components/constants.dart';
@@ -50,8 +51,6 @@ class AppCubit extends Cubit<AppStates> {
         });
       }
 
-      print(favorites);
-
       emit(SuccessHomeState());
     }).catchError((error) {
       print(error.toString());
@@ -84,7 +83,6 @@ class AppCubit extends Cubit<AppStates> {
             url: FAVORITES, data: {'product_id': productId}, token: token)
         .then((value) {
       changeFavoritesModel = ChangeFavoritesModel.fromJson(value.data);
-      print(value.data);
 
       if (!changeFavoritesModel!.status!) {
         favorites[productId] = !favorites[productId]!;
@@ -108,12 +106,30 @@ class AppCubit extends Cubit<AppStates> {
       token: token,
     ).then((value) {
       favoritesModel = FavoritesModel.fromJson(value.data);
-      printFullText(value.data.toString());
 
       emit(SuccessGetFavoritesState());
     }).catchError((error) {
       print(error.toString());
       emit(ErrorGetFavoritesState());
+    });
+  }
+
+  LoginModel? userModel;
+
+  void getUserData() {
+    emit(LoadingGetUserDataState());
+    DioHelper.getData(
+      url: PROFILE,
+      token: token,
+    ).then((value) {
+      userModel = LoginModel.fromJson(value.data);
+
+      printFullText(userModel!.data!.name!);
+
+      emit(SuccessGetUserDataState());
+    }).catchError((error) {
+      print(error.toString());
+      emit(ErrorGetUserDataState());
     });
   }
 }

@@ -33,3 +33,9 @@ class LoadingGetFavoritesState extends AppStates {}
 class SuccessGetFavoritesState extends AppStates {}
 
 class ErrorGetFavoritesState extends AppStates {}
+
+class LoadingGetUserDataState extends AppStates {}
+
+class SuccessGetUserDataState extends AppStates {}
+
+class ErrorGetUserDataState extends AppStates {}

@@ -21,10 +21,10 @@ class AppCubit extends Cubit<AppStates> {
 
   var currentIndex = 0;
 
-  List<Widget> bottomScreens = const [
-    ProductsScreen(),
-    CategoriesScreen(),
-    FavoritesScreen(),
+  List<Widget> bottomScreens = [
+    const ProductsScreen(),
+    const CategoriesScreen(),
+    const FavoritesScreen(),
     SettingsScreen(),
   ];
 
@@ -126,7 +126,7 @@ class AppCubit extends Cubit<AppStates> {
 
       printFullText(userModel!.data!.name!);
 
-      emit(SuccessGetUserDataState());
+      emit(SuccessGetUserDataState(userModel!));
     }).catchError((error) {
       print(error.toString());
       emit(ErrorGetUserDataState());

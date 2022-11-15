@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shop_app/shared/cubit/login/cubit.dart';
 import '../shared/components/components.dart';
+import '../shared/components/constants.dart';
 import '../shared/cubit/login/states.dart';
 import '../shared/network/local/cache_helper.dart';
 import 'home_screen.dart';
@@ -22,12 +23,10 @@ class LoginScreen extends StatelessWidget {
         listener: (BuildContext context, state) {
           if (state is LoginSuccessState) {
             if (state.loginModel.status == true) {
-              print(state.loginModel.message);
-              print(state.loginModel.data?.token);
-
               CacheHelper.saveData(
                       key: 'token', value: state.loginModel.data?.token)
                   .then((value) {
+                token = state.loginModel.data!.token;
                 Navigator.pushAndRemoveUntil(
                     context,
                     MaterialPageRoute(builder: (context) => const HomeScreen()),
@@ -37,7 +36,7 @@ class LoginScreen extends StatelessWidget {
               print(state.loginModel.message);
 
               showToast(
-                  message: state.loginModel.message, state: ToastStates.ERROR);
+                  message: state.loginModel.message!, state: ToastStates.ERROR);
             }
           }
         },

@@ -2,6 +2,7 @@ import 'package:conditional_builder_null_safety/conditional_builder_null_safety.
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shop_app/shared/cubit/login/cubit.dart';
+import 'package:shop_app/views/register_screen.dart';
 import '../shared/components/components.dart';
 import '../shared/components/constants.dart';
 import '../shared/cubit/login/states.dart';
@@ -24,7 +25,7 @@ class LoginScreen extends StatelessWidget {
           if (state is LoginSuccessState) {
             if (state.loginModel.status == true) {
               CacheHelper.saveData(
-                      key: 'token', value: state.loginModel.data?.token)
+                      key: 'token', value: state.loginModel.data!.token)
                   .then((value) {
                 token = state.loginModel.data!.token;
                 Navigator.pushAndRemoveUntil(
@@ -33,8 +34,6 @@ class LoginScreen extends StatelessWidget {
                     (route) => false);
               });
             } else {
-              print(state.loginModel.message);
-
               showToast(
                   message: state.loginModel.message!, state: ToastStates.ERROR);
             }
@@ -173,10 +172,10 @@ class LoginScreen extends StatelessWidget {
                           ),
                           TextButton(
                             onPressed: () {
-                              // Navigator.push(
-                              //     context,
-                              //     MaterialPageRoute(
-                              //         builder: (context) => RegisterScreen()));
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => RegisterScreen()));
                             },
                             child: const Text(
                               'Register Now',

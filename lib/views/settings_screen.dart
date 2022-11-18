@@ -4,12 +4,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shop_app/shared/components/constants.dart';
 import 'package:shop_app/shared/cubit/app/cubit.dart';
 import 'package:shop_app/shared/cubit/app/states.dart';
-import 'package:shop_app/views/login_screen.dart';
 
 class SettingsScreen extends StatelessWidget {
-  var nameController = TextEditingController();
-  var emailController = TextEditingController();
-  var phoneController = TextEditingController();
+
+  final nameController = TextEditingController();
+  final emailController = TextEditingController();
+  final phoneController = TextEditingController();
+
+  SettingsScreen({super.key});
 
   @override
   Widget build(BuildContext context) {

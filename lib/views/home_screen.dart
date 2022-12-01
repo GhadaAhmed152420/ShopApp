@@ -10,7 +10,7 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var cubit = AppCubit.get(context);
-
+    cubit.getUserData();
     return BlocConsumer<AppCubit, AppStates>(
       listener: (BuildContext context, state) {},
       builder: (BuildContext context, Object? state) {

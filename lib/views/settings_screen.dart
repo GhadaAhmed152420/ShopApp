@@ -105,6 +105,8 @@ class SettingsScreen extends StatelessWidget {
                   child: MaterialButton(
                     onPressed: () {
                       signOut(context);
+                      AppCubit.get(context).currentIndex = 0;
+                      AppCubit.get(context).userModel = null;
                     },
                     child: const Text(
                       'LOGOUT',

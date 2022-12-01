@@ -23,7 +23,7 @@ class RegisterScreen extends StatelessWidget {
     return BlocProvider(
       create: (BuildContext context) => RegisterCubit(),
       child: BlocConsumer<RegisterCubit, RegisterStates>(
-        listener: (BuildContext context, state) {  
+        listener: (BuildContext context, state) {
            if (state is RegisterSuccessState) {
             if (state.loginModel.status == true) {
               CacheHelper.saveData(
@@ -41,7 +41,7 @@ class RegisterScreen extends StatelessWidget {
             }
           }
         },
-        builder: (BuildContext context, Object? state) { 
+        builder: (BuildContext context, Object? state) {
           return Scaffold(
           appBar: AppBar(
             foregroundColor: Colors.black,
@@ -186,15 +186,10 @@ class RegisterScreen extends StatelessWidget {
                                     RegisterCubit.get(context).userRegister(
                                       email: emailController.text,
                                       password: passwordController.text,
-                                      name: nameController.text, 
+                                      name: nameController.text,
                                       phone: phoneController.text,
                                     );
                                   }
-                                  Navigator.pushAndRemoveUntil(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => const HomeScreen()),
-                                      (route) => false);
                                 },
                                 child: const Text(
                                   'REGISTER',
@@ -207,7 +202,7 @@ class RegisterScreen extends StatelessWidget {
                             fallback: (context) =>
                                 const Center(child: CircularProgressIndicator()),
                           ),
-                    
+
                         ],
                       ),
                     ),

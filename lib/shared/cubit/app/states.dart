@@ -42,3 +42,14 @@ class SuccessGetUserDataState extends AppStates {
 }
 
 class ErrorGetUserDataState extends AppStates {}
+
+class LoadingUpdateUserDataState extends AppStates {}
+
+class SuccessUpdateUserDataState extends AppStates {
+  final LoginModel loginModel;
+
+  SuccessUpdateUserDataState(this.loginModel);
+}
+
+class ErrorUpdateUserDataState extends AppStates {}
+

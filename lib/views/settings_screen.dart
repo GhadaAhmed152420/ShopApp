@@ -7,6 +7,7 @@ import 'package:shop_app/shared/cubit/app/states.dart';
 
 class SettingsScreen extends StatelessWidget {
 
+  var formKey = GlobalKey<FormState>();
   final nameController = TextEditingController();
   final emailController = TextEditingController();
   final phoneController = TextEditingController();
@@ -28,95 +29,126 @@ class SettingsScreen extends StatelessWidget {
           condition: AppCubit.get(context).userModel != null,
           builder: (BuildContext context) => Padding(
             padding: const EdgeInsets.all(20.0),
-            child: Column(
-              children: [
-                TextFormField(
-                  controller: nameController,
-                  validator: (String? value) {
-                    if (value!.isEmpty) {
-                      return "Name must not be empty";
-                    }
-                    return null;
-                  },
-                  keyboardType: TextInputType.name,
-                  decoration: InputDecoration(
-                    labelText: 'Name',
-                    prefixIcon: const Icon(
-                      Icons.person,
-                    ),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(20.0),
-                    ),
+            child: Form(
+              key: formKey,
+              child: Column(
+                children: [
+                  if(state is LoadingUpdateUserDataState)
+                  const LinearProgressIndicator(),
+                  const SizedBox(
+                    height: 20.0,
                   ),
-                ),
-                const SizedBox(
-                  height: 15.0,
-                ),
-                TextFormField(
-                  controller: emailController,
-                  validator: (String? value) {
-                    if (value!.isEmpty) {
-                      return "Email must not be empty";
-                    }
-                    return null;
-                  },
-                  keyboardType: TextInputType.emailAddress,
-                  decoration: InputDecoration(
-                    labelText: 'Email Address',
-                    prefixIcon: const Icon(
-                      Icons.email_outlined,
-                    ),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(20.0),
-                    ),
-                  ),
-                ),
-                const SizedBox(
-                  height: 15.0,
-                ),
-                TextFormField(
-                  controller: phoneController,
-                  validator: (String? value) {
-                    if (value!.isEmpty) {
-                      return "phone must not be empty";
-                    }
-                    return null;
-                  },
-                  keyboardType: TextInputType.phone,
-                  decoration: InputDecoration(
-                    labelText: 'Phone',
-                    prefixIcon: const Icon(
-                      Icons.phone,
-                    ),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(20.0),
-                    ),
-                  ),
-                ),
-                const SizedBox(
-                  height: 15.0,
-                ),
-                Container(
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    color: Colors.deepPurple,
-                    borderRadius: BorderRadius.circular(20.0),
-                  ),
-                  child: MaterialButton(
-                    onPressed: () {
-                      signOut(context);
-                      AppCubit.get(context).currentIndex = 0;
-                      AppCubit.get(context).userModel = null;
+                  TextFormField(
+                    controller: nameController,
+                    validator: (String? value) {
+                      if (value!.isEmpty) {
+                        return "Name must not be empty";
+                      }
+                      return null;
                     },
-                    child: const Text(
-                      'LOGOUT',
-                      style: TextStyle(
-                        color: Colors.white,
+                    keyboardType: TextInputType.name,
+                    decoration: InputDecoration(
+                      labelText: 'Name',
+                      prefixIcon: const Icon(
+                        Icons.person,
+                      ),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(20.0),
                       ),
                     ),
                   ),
-                ),
-              ],
+                  const SizedBox(
+                    height: 15.0,
+                  ),
+                  TextFormField(
+                    controller: emailController,
+                    validator: (String? value) {
+                      if (value!.isEmpty) {
+                        return "Email must not be empty";
+                      }
+                      return null;
+                    },
+                    keyboardType: TextInputType.emailAddress,
+                    decoration: InputDecoration(
+                      labelText: 'Email Address',
+                      prefixIcon: const Icon(
+                        Icons.email_outlined,
+                      ),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(20.0),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 15.0,
+                  ),
+                  TextFormField(
+                    controller: phoneController,
+                    validator: (String? value) {
+                      if (value!.isEmpty) {
+                        return "phone must not be empty";
+                      }
+                      return null;
+                    },
+                    keyboardType: TextInputType.phone,
+                    decoration: InputDecoration(
+                      labelText: 'Phone',
+                      prefixIcon: const Icon(
+                        Icons.phone,
+                      ),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(20.0),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 15.0,
+                  ),
+                  Container(
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      color: Colors.deepPurple,
+                      borderRadius: BorderRadius.circular(20.0),
+                    ),
+                    child: MaterialButton(
+                      onPressed: () {
+                        if(formKey.currentState!.validate()){
+                          AppCubit.get(context).updateUserData(name: nameController.text, email: emailController.text, phone: phoneController.text);
+                        }
+                      },
+                      child: const Text(
+                        'UPDATE',
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 15.0,
+                  ),
+                  Container(
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      color: Colors.deepPurple,
+                      borderRadius: BorderRadius.circular(20.0),
+                    ),
+                    child: MaterialButton(
+                      onPressed: () {
+                        signOut(context);
+                        AppCubit.get(context).currentIndex = 0;
+                        AppCubit.get(context).userModel = null;
+                      },
+                      child: const Text(
+                        'LOGOUT',
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
           fallback: (BuildContext context) =>

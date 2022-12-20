@@ -132,4 +132,27 @@ class AppCubit extends Cubit<AppStates> {
       emit(ErrorGetUserDataState());
     });
   }
+
+  void updateUserData(
+      {required String name, required String email, required String phone}) {
+    emit(LoadingUpdateUserDataState());
+    DioHelper.putData(
+      url: UPDATE_PROFILE,
+      token: token,
+      data: {
+        'name': name,
+        'email': email,
+        'phone': phone,
+      },
+    ).then((value) {
+      userModel = LoginModel.fromJson(value.data);
+
+      printFullText(userModel!.data!.name!);
+
+      emit(SuccessUpdateUserDataState(userModel!));
+    }).catchError((error) {
+      print(error.toString());
+      emit(ErrorUpdateUserDataState());
+    });
+  }
 }

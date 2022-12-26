@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:shop_app/shared/cubit/search/cubit.dart';
-import '../shared/components/components.dart';
+import 'package:shop_app/shared/components/components.dart';
+import '../shared/cubit/search/cubit.dart';
 import '../shared/cubit/search/states.dart';
 
 class SearchScreen extends StatelessWidget {
@@ -15,8 +15,8 @@ class SearchScreen extends StatelessWidget {
     return BlocProvider(
       create: (BuildContext context) => SearchCubit(),
       child: BlocConsumer<SearchCubit, SearchStates>(
-        listener: (BuildContext context, state) {},
-        builder: (BuildContext context, Object? state) {
+        listener: (context, state) {},
+        builder: (context, state) {
           return Scaffold(
             appBar: AppBar(
               backgroundColor: Colors.white,
@@ -30,17 +30,17 @@ class SearchScreen extends StatelessWidget {
                   children: [
                     TextFormField(
                       controller: searchController,
-                      validator: (String? value) {
+                      keyboardType: TextInputType.text,
+                      validator: (value) {
                         if (value!.isEmpty) {
-                          return "Enter text to search";
+                          return 'enter text to search';
                         }
                         return null;
                       },
-                      onFieldSubmitted: (String text) {
+                      onFieldSubmitted: (String text){
                         SearchCubit.get(context).search(text);
                       },
-                      keyboardType: TextInputType.text,
-                      decoration: InputDecoration(
+                        decoration: InputDecoration(
                         labelText: 'Search',
                         prefixIcon: const Icon(
                           Icons.search,
@@ -50,30 +50,17 @@ class SearchScreen extends StatelessWidget {
                         ),
                       ),
                     ),
-                    const SizedBox(
-                      height: 10.0,
-                    ),
-                    if (state is SearchLoadingState) const LinearProgressIndicator(),
-                    const SizedBox(
-                      height: 10.0,
-                    ),
-                    if (state is SearchSuccessState)
+                    const SizedBox(height: 10.0,),
+                    if(state is SearchLoadingState)
+                      const LinearProgressIndicator(),
+                    const SizedBox(height: 10.0,),
+                    if(state is SearchSuccessState)
                       Expanded(
                         child: ListView.separated(
-                            itemBuilder: (context, index) => buildProductList(
-                                SearchCubit.get(context)
-                                    .searchModel!
-                                    .data!
-                                    .data[index],
-                                context,
-                                isOldPrice: false),
-                            separatorBuilder: (context, index) =>
-                                const Divider(),
-                            itemCount: SearchCubit.get(context)
-                                .searchModel!
-                                .data!
-                                .data
-                                .length),
+                          itemBuilder: (context, index) => buildProductList(SearchCubit.get(context).model!.data!.data[index], context, isOldPrice: false),
+                          separatorBuilder: (context, index) => const Divider(),
+                          itemCount: SearchCubit.get(context).model!.data!.data.length,
+                        ),
                       ),
                   ],
                 ),

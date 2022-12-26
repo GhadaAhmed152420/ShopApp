@@ -1,14 +1,9 @@
-abstract class SearchStates{}
+abstract class SearchStates {}
 
-class SearchInitialState extends SearchStates{}
+class SearchInitialState extends SearchStates {}
 
-class SearchLoadingState extends SearchStates{}
+class SearchLoadingState extends SearchStates {}
 
-class SearchSuccessState extends SearchStates{}
+class SearchSuccessState extends SearchStates {}
 
-class SearchErrorState extends SearchStates{
-
-  final String error;
-
-  SearchErrorState(this.error);
-}
+class SearchErrorState extends SearchStates {}
